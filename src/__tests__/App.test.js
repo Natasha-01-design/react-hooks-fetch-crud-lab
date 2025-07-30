@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitForElementToBeRemoved,
+  waitFor,
 } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { server } from "../mocks/server";
@@ -42,6 +43,12 @@ test("creates a new question when the form is submitted", async () => {
   });
   fireEvent.change(screen.queryByLabelText(/Answer 2/), {
     target: { value: "Test Answer 2" },
+  });
+  fireEvent.change(screen.queryByLabelText(/Answer 3/), {
+    target: { value: "Test Answer 3" },
+  });
+  fireEvent.change(screen.queryByLabelText(/Answer 4/), {
+    target: { value: "Test Answer 4" },
   });
   fireEvent.change(screen.queryByLabelText(/Correct Answer/), {
     target: { value: "1" },
@@ -86,9 +93,13 @@ test("updates the answer when the dropdown is changed", async () => {
     target: { value: "3" },
   });
 
-  expect(screen.queryAllByLabelText(/Correct Answer/)[0].value).toBe("3");
+  await waitFor(() => {
+    expect(screen.queryAllByLabelText(/Correct Answer/)[0].value).toBe("3");
+  });
 
   rerender(<App />);
 
-  expect(screen.queryAllByLabelText(/Correct Answer/)[0].value).toBe("3");
+  await waitFor(() => {
+    expect(screen.queryAllByLabelText(/Correct Answer/)[0].value).toBe("3");
+  });
 });
